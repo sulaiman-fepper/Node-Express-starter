@@ -1,9 +1,9 @@
 const db = require("../config/db");
+const { v4: uuidv4 } = require('uuid');
 
 class Transactions {
 
     constructor(payable_type, payable_id, wallet_id, type, amount, confirmed, meta) {
-
         this.payable_type = payable_type;
         this.payable_id = payable_id;
         this.wallet_id = wallet_id;
@@ -14,8 +14,44 @@ class Transactions {
     }
 
 
+    save(){
+        let createdDate = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        let uuid = uuidv4();
+        let sql = `INSERT INTO 
+        transactions(
+            payable_type,
+            payable_id,
+            wallet_id,
+            type,
+            amount,
+            confirmed,
+            meta,
+            uuid,
+            created_at,
+            updated_at
+        ) 
+        VALUES(
+            "${this.payable_type}",
+            "${this.payable_id}",
+            "${this.wallet_id}",
+            "${this.type}",
+            "${this.amount}",
+            "${this.confirmed}",
+            "${this.meta}",
+            "${uuid}",
+            "${createdDate}",
+            "${createdDate}"
+        )`;
+
+            // let sql2 = `SELECT * FROM users WHERE id = SCOPE_IDENTITY();`
+            // db.execute(sql);
+
+        return db.execute(sql);
+    }
+
+
     static getTransactionById(id){
-        let sql = `SELECT * FROM transactions WHERE payable_id = ${id} ORDER BY id DESC;`;
+        let sql = `SELECT * FROM transactions WHERE payable_id = ${id} ORDER BY id DESC LIMIT 50;`;
 
         return db.execute(sql);
     }

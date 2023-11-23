@@ -18,7 +18,7 @@ function checkOperation(latitudeFrom, longitudeFrom, restaurant){
 
     let latDelta = latTo - latFrom;
     let lonDelta = lonTo - lonFrom;
-    let angle = 2 * Math.asin(Math.sqrt(Math.pow(latDelta / 2), 2) + Math.cos(latFrom) * Math.cos(latTo) * Math.pow(Math.sin(lonDelta / 2), 2));
+    let angle = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(latDelta / 2), 2) + Math.cos(latFrom) * Math.cos(latTo) * Math.pow(Math.sin(lonDelta / 2), 2)));
 
 
     let distance = angle * 6371;
@@ -113,4 +113,15 @@ exports.setDefaultAddress = async (req, res, next) => {
     else {
         res.status(401).json({success: false});
     }
+}
+
+exports.googleMapApiList = async (req, res, next) => {
+    res.json({
+        mapApiForAndroid: '',
+        mapApiForIos: '',
+        placeApiForAndroid: '',
+        placeApiForIos: '',
+        mapApiForAndroidConfig: '',
+        mapApiForIosConfig: ''
+    })
 }

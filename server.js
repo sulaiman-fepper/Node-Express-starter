@@ -7,10 +7,11 @@ const app = express();
 app.use(express.json()); // parse json bodies in the request object
 
 // Redirect requests to endpoint starting with /posts to postRoutes.js
-app.use("/user", require("./routes/userRoutes"));
+app.use("/public/api", require("./routes/userRoutes"));
 app.use("/address", require("./routes/addressRoutes"));
 app.use("/coupon", require("./routes/couponRouters"));
 app.use("/delivery", require("./routes/deliveryRoutes"));
+app.use("/admin", require("./routes/adminRoutes"));
 
 // Global Error Handler. IMPORTANT function params MUST start with err
 app.use((err, req, res, next) => {

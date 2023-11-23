@@ -3,6 +3,7 @@ const Transactions = require("../models/Transactions");
 const DeliveryCollection = require("../models/DeliveryCollection");
 const User = require("../models/User");
 const Ratings = require("../models/Ratings");
+const Orders = require("../models/Orders");
 
 
 exports.updateDeliveryUserInfo = async (req, res, next) => {
@@ -82,8 +83,54 @@ exports.updateDeliveryUserInfo = async (req, res, next) => {
 }
 
 exports.getDeliveryOrders = async (req, res, next) => {
-    let deliveryUser = await User.findById(req.body['id']);
-    deliveryUser = deliveryUser[0][0];
 
+    let deliveryGuyNewOrders = await Orders.deliveryGuyNewOrders(req.body['id']);
+    deliveryGuyNewOrders = (deliveryGuyNewOrders[0].map((item)=>item['orders']))
+
+
+    let acceptDeliveries = await AcceptDeliveries.acceptDeliveries(req.body['id']);
+    acceptDeliveries = (acceptDeliveries[0].map((item)=>item['orders']))
+
+    let pickedupOrders = await AcceptDeliveries.pickedupOrders(req.body['id']);
+    pickedupOrders = (pickedupOrders[0].map((item)=>item['orders']))
+
+    res.status(200).json({
+        'new_orders': deliveryGuyNewOrders,
+        'accepted_orders': acceptDeliveries,
+        'pickedup_orders': pickedupOrders
+    })
+}
+
+
+
+exports.getSingleDeliveryOrder = async (req, res, next) => {
+    let checkOrder = await AcceptDeliveries.checkOrder(req.body['order_id'], req.body['user_id']);
+    checkOrder = checkOrder[0];
+
+    let singleOrder = await Orders.singleOrder(req.body['order_id'])
+    singleOrder = singleOrder[0];
+
+    if(checkOrder.length != 0){
+
+    }
+    res.status(200).json({
+        'new_orders': checkOrder,
+        'accepted_orders': singleOrder,
+        // 'pickedup_orders': pickedupOrders
+    })
+    
+}
+
+
+
+exports.setDeliveryGuyGpsLocation = async (req, res, next) => {
+    res.send("ignored")
+}
+
+exports.getDeliveryGuyGpsLocation = async (req, res, next) => {
+    res.send("ignored")
+}
+
+exports.acceptToDeliver = async (req, res, next) => {
     
 }

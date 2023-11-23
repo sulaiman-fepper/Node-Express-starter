@@ -104,6 +104,11 @@ class Coupon {
         return db.execute(sql);
     }
 
+    static updateCouponCount(id, count){
+        let sql = `UPDATE coupons SET count = ${count} WHERE id = ${id}`
+        return db.execute(sql);
+    }
+
 
     static getCouponWithCode(coupon_code){
         let sql = `SELECT * FROM coupons WHERE code = "${coupon_code}";`;

@@ -18,4 +18,12 @@ router.route("/delivery_collection_logs_for_single_user").post(deliveryCollectio
 
 router.route("/update_delivery_user_info").post(deliveryControllers.updateDeliveryUserInfo);
 
+router.route("/get_delivery_orders").post(deliveryControllers.getDeliveryOrders);
+
+router.route("/get_single_delivery_order").post(deliveryControllers.getSingleDeliveryOrder);
+
+router.route("/set-delivery-guy-gps-location").post(deliveryControllers.setDeliveryGuyGpsLocation);
+
+router.route("/get-delivery-guy-gps-location").post(deliveryControllers.getDeliveryGuyGpsLocation);
+
 module.exports = router;

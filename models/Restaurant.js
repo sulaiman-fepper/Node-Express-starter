@@ -56,6 +56,235 @@ class Restaurant {
         let sql = `SELECT id, name FROM restaurants;`;
         return db.execute(sql);
     }
+
+    static count(){
+        let sql = `SELECT COUNT(id) AS count FROM restaurants;`;
+        return db.execute(sql);
+    }
+
+
+    static getActiveRestaurantWithDeliveryAreasAndRatings(is_active) {
+
+        let sql = `SELECT 
+        JSON_OBJECT(
+            'id', res.id,
+            'name', res.name,
+            'description', res.description,
+            'image', res.image,
+            'rating', res.rating,
+            'delivery_time', res.delivery_time,
+            'price_range', res.price_range,
+            'slug', res.slug,
+            'is_featured', res.is_featured,
+            'is_active', res.is_active,
+            'is_pureveg', res.is_pureveg,
+            'delivery_type', res.delivery_type,
+            'delivery_radius', res.delivery_radius,
+            'latitude', res.latitude,
+            'longitude', res.longitude,
+            'avgRating', AVG(r.rating_store)
+        ) AS restaurants
+        FROM restaurants AS res 
+        JOIN ratings r ON r.restaurant_id = res.id
+        WHERE res.is_accepted = 1 AND res.is_active = ${is_active} AND delivery_type IN (1, 3) GROUP BY res.id ORDER BY order_column;`;
+
+
+        // let sql = `SELECT * FROM restaurants WHERE is_accepted = 1 AND delivery_type IN (1, 3) ORDER BY order_column;`;
+        return db.execute(sql);
+    }
+
+    static getActiveRestaurantWithDeliveryAreasAndRatingsAndCategory(is_active, id) {
+
+        let sql = `SELECT 
+        JSON_OBJECT(
+            'id', res.id,
+            'name', res.name,
+            'description', res.description,
+            'image', res.image,
+            'rating', res.rating,
+            'delivery_time', res.delivery_time,
+            'price_range', res.price_range,
+            'slug', res.slug,
+            'is_featured', res.is_featured,
+            'is_active', res.is_active,
+            'is_pureveg', res.is_pureveg,
+            'delivery_type', res.delivery_type,
+            'delivery_radius', res.delivery_radius,
+            'latitude', res.latitude,
+            'longitude', res.longitude,
+            'avgRating', AVG(r.rating_store)
+        ) AS restaurants
+        FROM restaurants AS res 
+        JOIN ratings r ON r.restaurant_id = res.id
+        JOIN restaurant_category_restaurant rcr ON rcr.restaurant_id = res.id
+        WHERE res.is_accepted = 1 AND res.is_active = ${is_active} AND delivery_type IN (1, 3) AND rcr.restaurant_category_id IN (${id.toString().replace("[", '').replace("]", '')}) GROUP BY res.id ORDER BY order_column;`;
+
+
+        // let sql = `SELECT * FROM restaurants WHERE is_accepted = 1 AND delivery_type IN (1, 3) ORDER BY order_column;`;
+        return db.execute(sql);
+    }
+
+
+    static getActiveSelfPickupRestaurantWithDeliveryAreasAndRatings(is_active) {
+
+        let sql = `SELECT 
+        JSON_OBJECT(
+            'id', res.id,
+            'name', res.name,
+            'description', res.description,
+            'image', res.image,
+            'rating', res.rating,
+            'delivery_time', res.delivery_time,
+            'price_range', res.price_range,
+            'slug', res.slug,
+            'is_featured', res.is_featured,
+            'is_active', res.is_active,
+            'is_pureveg', res.is_pureveg,
+            'delivery_type', res.delivery_type,
+            'delivery_radius', res.delivery_radius,
+            'latitude', res.latitude,
+            'longitude', res.longitude,
+            'avgRating', AVG(r.rating_store)
+        ) AS restaurants
+        FROM restaurants AS res 
+        JOIN ratings r ON r.restaurant_id = res.id
+        WHERE res.is_accepted = 1 AND res.is_active = ${is_active} AND delivery_type IN (2, 3) GROUP BY res.id ORDER BY order_column;`;
+
+
+        // let sql = `SELECT * FROM restaurants WHERE is_accepted = 1 AND delivery_type IN (1, 3) ORDER BY order_column;`;
+        return db.execute(sql);
+    }
+
+
+    static getActiveSelfPickupRestaurantWithDeliveryAreasAndRatingsAndCategory(is_active, id) {
+
+        let sql = `SELECT 
+        JSON_OBJECT(
+            'id', res.id,
+            'name', res.name,
+            'description', res.description,
+            'image', res.image,
+            'rating', res.rating,
+            'delivery_time', res.delivery_time,
+            'price_range', res.price_range,
+            'slug', res.slug,
+            'is_featured', res.is_featured,
+            'is_active', res.is_active,
+            'is_pureveg', res.is_pureveg,
+            'delivery_type', res.delivery_type,
+            'delivery_radius', res.delivery_radius,
+            'latitude', res.latitude,
+            'longitude', res.longitude,
+            'avgRating', AVG(r.rating_store)
+        ) AS restaurants
+        FROM restaurants AS res 
+        JOIN ratings r ON r.restaurant_id = res.id
+        JOIN restaurant_category_restaurant rcr ON rcr.restaurant_id = res.id
+        WHERE res.is_accepted = 1 AND res.is_active = ${is_active} AND delivery_type IN (2, 3) AND rcr.restaurant_category_id IN (${id.toString().replace("[", '').replace("]", '')}) GROUP BY res.id ORDER BY order_column;`;
+
+
+        // let sql = `SELECT * FROM restaurants WHERE is_accepted = 1 AND delivery_type IN (1, 3) ORDER BY order_column;`;
+        return db.execute(sql);
+    }
+
+
+    static searchRestaurants(params){
+        // let sql = `SELECT * FROM restaurants WHERE is_accepted = 1 AND name LIKE "%${params}%";`;
+        let sql = `SELECT 
+        JSON_OBJECT(
+            'id', res.id,
+            'name', res.name,
+            'description', res.description,
+            'image', res.image,
+            'rating', res.rating,
+            'delivery_time', res.delivery_time,
+            'price_range', res.price_range,
+            'slug', res.slug,
+            'is_featured', res.is_featured,
+            'is_active', res.is_active,
+            'is_pureveg', res.is_pureveg,
+            'delivery_type', res.delivery_type,
+            'delivery_radius', res.delivery_radius,
+            'latitude', res.latitude,
+            'longitude', res.longitude,
+            'avgRating', AVG(r.rating_store)
+        ) AS restaurants
+        FROM restaurants AS res
+        LEFT JOIN ratings r ON r.restaurant_id = res.id
+        WHERE is_accepted = 1 AND name LIKE "%${params}%"
+        GROUP BY res.id;`;
+
+        return db.execute(sql);
+    }
+
+    static searchItems(params){
+        // let sql = `SELECT * FROM restaurants WHERE is_accepted = 1 AND name LIKE "%${params}%";`;
+        let sql = `SELECT JSON_OBJECT(
+            'id', i.id,
+            'restaurant_id', i.restaurant_id,
+            'item_category_id', i.item_category_id,
+            'name', i.name,
+            'price', i.price,
+            'old_price', i.old_price,
+            'image', i.image,
+            'is_recommended', i.is_recommended,
+            'is_popular', i.is_popular,
+            'is_new', i.is_new,
+            'desc', i.desc,
+            'placeholder_image', i.placeholder_image,
+            'is_active', i.is_active,
+            'is_veg', i.is_veg,
+            'order_column', i.order_column,
+            'restaurant', JSON_OBJECT(
+                'id', res.id,
+                'name', res.name,
+                'description', res.description,
+                'image', res.image,
+                'rating', res.rating,
+                'delivery_time', res.delivery_time,
+                'price_range', res.price_range,
+                'slug', res.slug,
+                'is_featured', res.is_featured,
+                'is_accepted', res.is_accepted,
+                'is_active', res.is_active,
+                'is_pureveg', res.is_pureveg,
+                'delivery_type', res.delivery_type,
+                'delivery_radius', res.delivery_radius,
+                'latitude', res.latitude,
+                'longitude', res.longitude
+            ),
+            'addon_categories', IF(ac.id IS NULL, NULL, 
+                JSON_OBJECT(
+                    'id', ac.id,
+                    'name', ac.name,
+                    'type', ac.type,
+                    'user_id', ac.user_id,
+                    'description', ac.description,
+                    'addon_limit', ac.addon_limit,
+                    'addons', IF(a.id IS NULL, NULL, 
+                        JSON_ARRAYAGG(
+                            JSON_OBJECT(
+                                'id', a.id,
+                                'name', a.name,
+                                'price', a.price,
+                                'addon_category_id', a.addon_category_id,
+                                'user_id', a.user_id,
+                                'is_active', a.is_active
+                            )
+                        )
+                    )
+                )
+            )
+        ) AS items
+        FROM items AS i
+        LEFT JOIN restaurants res ON i.restaurant_id = res.id
+        LEFT JOIN addon_category_item aci ON aci.item_id = i.id
+        LEFT JOIN addon_categories ac ON aci.addon_category_id = ac.id
+        LEFT JOIN addons a ON a.addon_category_id = ac.id
+        WHERE i.is_active = 1 AND i.name LIKE "%${params}%" AND a.is_active = 1
+        GROUP BY i.restaurant_id;`;
+        return db.execute(sql);
+    }
 }
 
 module.exports = Restaurant;
